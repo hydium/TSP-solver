@@ -91,22 +91,45 @@ for i in range(dim - 2):
 
 print("mst is done")
 
-#dfs to obtain TSP tour
+# dfs to obtain TSP tour
+# def dfs_walk(nodes):
+# 	discovered = np.zeros(dim)
+# 	tour = np.zeros(dim)
+# 	S = [] #stack
+
+# 	S.append(0)
+
+# 	index = 0
+# 	while len(S) > 0:
+# 		vertex = S.pop()
+# 		if discovered[vertex] == 0:
+# 			discovered[vertex] = 1
+# 			tour[index] = vertex
+# 			index = index + 1
+# 			for child in nodes[vertex].children:
+# 				S.append(child)
+
+# 	return tour
+
+# tour = dfs_walk(nodes)
+
 discovered = np.zeros(dim)
 tour = np.zeros(dim)
-S = [] #stack
+iteration = 0
 
-S.append(0)
+def dfs_walk(vertex):
+	global iteration
+	discovered[vertex] = 1
+	tour[iteration] = vertex
+	iteration = iteration + 1
 
-index = 0
-while len(S) > 0:
-	vertex = S.pop()
-	if discovered[vertex] == 0:
-		discovered[vertex] = 1
-		tour[index] = vertex
-		index = index + 1
-		for child in nodes[vertex].children:
-			S.append(child)		
+	for child in nodes[vertex].children:
+		if discovered[child] == 0:
+			dfs_walk(child)
+
+dfs_walk(0)
+
+# print(tour)
 
 
 distance = 0
@@ -125,22 +148,22 @@ for i in range(dim):
 
 f.close()
 
-#best tour
-# f = open("best_tour.txt", "r")
+# best tour
+f = open("best_tour.txt", "r")
 
-# best_tour = np.zeros(dim)
+best_tour = np.zeros(dim)
 
-# index = 0
-# for city in f:
-# 	best_tour[index] = int(city)
-# 	index = index + 1
+index = 0
+for city in f:
+	best_tour[index] = int(city)
+	index = index + 1
 
-# distance = 0
-# for i in range(dim - 1):
-# 	distance = distance + graph[int(best_tour[i]) - 1][int(best_tour[i + 1]) - 1]
+distance = 0
+for i in range(dim - 1):
+	distance = distance + graph[int(best_tour[i]) - 1][int(best_tour[i + 1]) - 1]
 
-# distance = distance + graph[int(best_tour[dim - 1]) - 1][int(best_tour[0]) - 1]
+distance = distance + graph[int(best_tour[dim - 1]) - 1][int(best_tour[0]) - 1]
 
-# print(distance)
+print(distance)
 
-# f.close()
+f.close()
